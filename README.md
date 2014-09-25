@@ -9,9 +9,9 @@ Java 7, maven 3, and appropriate permissions to checkout git repos
 
 ## Installing from scratch
 
-    ./first_time_dev_setup.sh
+    . setenv.sh                   # set up your shell environment
+    ./first_time_dev_setup.sh     # setup git submodules, install cobbzilla-parent pom
 
-This will clone the various git submodule repositories. It also installs the cobbzilla-parent pom.
 
 ## Building
 
