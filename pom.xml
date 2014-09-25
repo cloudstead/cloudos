@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+(c) Copyright 2014 cloudstead.io
+This code is available under the GNU Affero General Public License, version 3: https://www.gnu.org/licenses/agpl-3.0.html
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cloudstead</groupId>
+    <artifactId>cloudos</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <licenses>
+        <license>
+            <name>The GNU Affero General Public License, Version 3</name>
+            <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>cloudos-lib</module>
+        <module>cloudos-appstore</module>
+        <module>cloudos-apps</module>
+        <module>cloudos-dns</module>
+        <module>cloudos-server</module>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>complete</id>
+            <!-- these library modules hardly ever change, so don't build them all the time -->
+            <modules>
+                <module>utils</module>
+            </modules>
+        </profile>
+    </profiles>
+
+</project>

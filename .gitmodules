@@ -1,0 +1,18 @@
+[submodule "utils"]
+	path = utils
+	url = https://github.com/cloudstead/utils.git
+[submodule "cloudos-apps"]
+	path = cloudos-apps
+	url = https://github.com/cloudstead/cloudos-apps.git
+[submodule "cloudos-appstore"]
+	path = cloudos-appstore
+	url = https://github.com/cloudstead/cloudos-appstore.git
+[submodule "cloudos-dns"]
+	path = cloudos-dns
+	url = https://github.com/cloudstead/cloudos-dns.git
+[submodule "cloudos-lib"]
+	path = cloudos-lib
+	url = https://github.com/cloudstead/cloudos-lib.git
+[submodule "cloudos-server"]
+	path = cloudos-server
+	url = https://github.com/cloudstead/cloudos-server.git
