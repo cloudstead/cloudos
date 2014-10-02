@@ -53,7 +53,7 @@ if [[ -z "${packages}" || "${packages}" = "all" ]] ; then
 fi
 
 for package in ${packages} ; do
-  if [[ ${package} = "." || ${package} = $(basename $(pwd)) ]] ; then
+  if [[ ${package} = "." || ${package} = $(basename $(pwd)) || ${package} = "cloudos" ]] ; then
     continue # do not recurse :)
   fi
   cd ${BASE}
