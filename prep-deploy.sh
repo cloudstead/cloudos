@@ -58,7 +58,7 @@ if [ ${IS_SERVER} -eq 1 ] ; then
       mvn -DskipTests=true clean package 1>&2
     fi
 
-    NUM_JARS=$(find target -type f -name "${JAR_MATCH}" | wc -l | tr -d ' ')
+    NUM_JARS=$(find target -type f -name "${JAR_MATCH}" | grep -v '/target/' | wc -l | tr -d ' ')
     if [ ${NUM_JARS} -gt 1 ] ; then
       die "Multiple jars found: $(find target -type f -name ${JAR_MATCH})"
     fi
