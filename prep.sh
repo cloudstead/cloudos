@@ -56,8 +56,7 @@ for package in ${packages} ; do
   if [[ ${package} = "." || ${package} = $(basename $(pwd)) || ${package} = "cloudos" ]] ; then
     continue # do not recurse :)
   fi
-  cd ${BASE}
-  artifacts=$(bash ./prep-deploy.sh ${NO_GEN_SQL} ${package})
+  artifacts=$(bash ${BASE}/prep-deploy.sh ${NO_GEN_SQL} ${package})
   if [ $? -ne 0 ] ; then
     die "Error preparing package: ${package}"
   fi

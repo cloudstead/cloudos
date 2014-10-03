@@ -34,16 +34,7 @@ if [ -z ${APP} ] ; then
 fi
 
 BASE=$(cd $(dirname $0) && pwd)
-case ${APP} in
-  server | dns | apps)
-    APP=cloudos-${APP}
-    APP_DIR=${BASE}/${APP}
-    ;;
-  *)
-    die "App not recognized: ${APP}"
-    ;;
-esac
-
+APP_DIR=$(find ${BASE} -maxdepth 3 -type d -name ${APP} | grep -v '.git/' | grep -v '/apps/' | grep -v '/target/')
 if [ -z ${APP_DIR} ] ; then
   die "App does not exist: ${APP}"  # should never happen
 fi
