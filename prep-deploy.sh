@@ -9,7 +9,6 @@
 #
 # Examples:
 #   prep-deploy.sh cloudos-server     # create the cloudos-server.tar.gz tarball 
-#   prep-deploy.sh cloudos-appstore   # create the cloudos-appstore.tar.gz tarball 
 #   prep-deploy.sh cloudos-apps       # create the various app tarballs
 #
 # Care must be taken when editing this file -- the "prep.sh" script (which calls prep-deploy.sh on each 
@@ -49,12 +48,21 @@ if [ -f ${APP_DIR}/src/main/resources/spring.xml ] ; then
 fi
 
 if [ ${IS_SERVER} -eq 1 ] ; then
-    if [[ ! -d target || $(find target -type f -name "${APP}*.jar" | wc -l | tr -d ' ') -eq 0 ]] ; then
+
+    APP_NAME="$(grep artifactId pom.xml | head -2 | grep ${APP} | tr '<>' '  ' | awk '{print $2}')"
+    DEPLOY=target/${APP_NAME}
+    JAR_MATCH="${APP_NAME}*.jar"
+
+    if [[ ! -d target || $(find target -type f -name "${JAR_MATCH}" | wc -l | tr -d ' ') -eq 0 ]] ; then
       echo 1>&2 "${APP} jar not found, building it"
       mvn -DskipTests=true clean package 1>&2
     fi
 
-    if [ $(find target -type f -name "${APP}*.jar" | wc -l | tr -d ' ') -eq 0 ] ; then
+    NUM_JARS=$(find target -type f -name "${JAR_MATCH}" | wc -l | tr -d ' ')
+    if [ ${NUM_JARS} -gt 1 ] ; then
+      die "Multiple jars found: $(find target -type f -name ${JAR_MATCH})"
+    fi
+    if [ ${NUM_JARS} -eq 0 ] ; then
       echo 1>&2 "Error building ${APP}."
       exit 1
     fi
@@ -83,10 +91,10 @@ if [ ${IS_SERVER} -eq 1 ] ; then
       rm -f ${GEN_SQL_LOG}
     fi
 
-    cp target/${APP}-*.jar ${DEPLOY}/target
+    cp target/${JAR_MATCH} ${DEPLOY}/target
 fi
 
-# Delegate to app-specific stuff (or for non-servers, do everything here)
+# Delegate to app-specific stuff
 if [ -f ${APP_DIR}/prep-deploy.sh ] ; then
   ${APP_DIR}/prep-deploy.sh ${DEPLOY}
 
@@ -97,6 +105,6 @@ fi
 
 if [ ${IS_SERVER} -eq 1 ] ; then
     # Non-servers do their own packaging
-    cd target && tar czf ${APP}.tar.gz ${APP}
-    echo ${APP_DIR}/target/${APP}.tar.gz
+    cd target && tar czf ${APP_NAME}.tar.gz ${APP_NAME}
+    echo ${APP_DIR}/target/${APP_NAME}.tar.gz
 fi
