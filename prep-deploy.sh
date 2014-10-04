@@ -83,7 +83,7 @@ if [ ${IS_SERVER} -eq 1 ] ; then
 
     if [[ -x gen-sql.sh ]] && [[ -z ${NO_GEN_SQL} ]] ; then
       GEN_SQL_LOG=$(mktemp /tmp/gen-sql.XXXXXXX)
-      ./gen-sql.sh 2>&1 > ${GEN_SQL_LOG}
+      ./gen-sql.sh silent 2>&1 > ${GEN_SQL_LOG}
       if [ $? -ne 0 ] ; then
           echo 1>&2 "Error running gen-sql.sh: check ${GEN_SQL_LOG}"
           exit 1
