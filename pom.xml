@@ -8,6 +8,12 @@ This code is available under the GNU Affero General Public License, version 3: h
 
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.cobbzilla</groupId>
+        <artifactId>cobbzilla-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>cloudstead</groupId>
     <artifactId>cloudos</artifactId>
     <version>1.0.0-SNAPSHOT</version>
