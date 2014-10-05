@@ -49,7 +49,7 @@ fi
 shift
 packages="$@"
 if [[ -z "${packages}" || "${packages}" = "all" ]] ; then
-  packages=$(find ${BASE} -maxdepth 3 -type f -name "prep-deploy.sh" -exec dirname {} \; | xargs -n 1 basename)
+  packages=$(find ${BASE} -maxdepth 4 -type f -name "prep-deploy.sh" -exec dirname {} \; | xargs -n 1 basename)
 fi
 
 for package in ${packages} ; do
