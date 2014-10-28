@@ -52,7 +52,33 @@ if [[ -z "${packages}" || "${packages}" = "all" ]] ; then
   packages=$(find ${BASE} -maxdepth 4 -type f -name "prep-deploy.sh" -exec dirname {} \; | xargs -n 1 basename)
 fi
 
+# Split packages into "servers" and "apps" so we can do servers first (they may generate SQL files/artifacts for inclusion into apps)
+servers=""
+apps=""
 for package in ${packages} ; do
+  if [ $(echo -n ${package} | grep -- "-apps" | wc -l | tr -d ' ') -gt 0 ] ; then
+    apps="${apps} ${package}"
+  else
+    servers="${servers} ${package}"
+  fi
+done
+
+for package in ${servers} ; do
+  if [[ ${package} = "." || ${package} = $(basename $(pwd)) || ${package} = "cloudos" ]] ; then
+    continue # do not recurse :)
+  fi
+  artifacts=$(bash ${BASE}/prep-deploy.sh ${NO_GEN_SQL} ${package})
+  if [ $? -ne 0 ] ; then
+    die "Error preparing package: ${package}"
+  fi
+  if [ -z "${artifacts}" ] ; then
+    die "package produced no artifacts: ${package}"
+  else
+    rsync -avc --progress ${artifacts} ${TARGET} || die "Error copying to ${TARGET}"
+  fi
+done
+
+for package in ${apps} ; do
   if [[ ${package} = "." || ${package} = $(basename $(pwd)) || ${package} = "cloudos" ]] ; then
     continue # do not recurse :)
   fi
