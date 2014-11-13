@@ -49,7 +49,7 @@ fi
 shift
 packages="$@"
 if [[ -z "${packages}" || "${packages}" = "all" ]] ; then
-  packages=$(find ${BASE} -maxdepth 4 -type f -name "prep-deploy.sh" -exec dirname {} \; | xargs -n 1 basename)
+  packages=$(find ${BASE}/ -maxdepth 4 -type f -name "prep-deploy.sh" -exec dirname {} \; | xargs -n 1 basename)
 fi
 
 # Split packages into "servers" and "apps" so we can do servers first (they may generate SQL files/artifacts for inclusion into apps)
@@ -74,7 +74,7 @@ for package in ${servers} ; do
   if [ -z "${artifacts}" ] ; then
     die "package produced no artifacts: ${package}"
   else
-    rsync -avc --progress ${artifacts} ${TARGET} || die "Error copying to ${TARGET}"
+    rsync -avc --progress ${artifacts} ${TARGET} || die "Error copying ${artifacts} to ${TARGET}"
   fi
 done
 
