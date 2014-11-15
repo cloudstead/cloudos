@@ -92,6 +92,13 @@ if [ ${IS_SERVER} -eq 1 ] ; then
       rm -f ${GEN_SQL_LOG}
     fi
 
+    if [ -d target/api-examples ] ; then
+      cp -R target/api-examples ${DEPLOY}/site/
+    fi
+    if [ -d target/miredot ] ; then
+      cp -R target/miredot ${DEPLOY}/site/api-docs
+    fi
+
     cp target/${JAR_MATCH} ${DEPLOY}/target
 fi
 
