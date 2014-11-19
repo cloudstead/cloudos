@@ -14,7 +14,7 @@ For Ubuntu:
     sudo npm install -g lineman                # lineman builds the frontend emberjs UI
     sudo ln -s /usr/bin/nodejs /usr/bin/node   # lineman looks for node here
 
-## First-time stuff
+## Setup the code
 
     git clone https://github.com/cloudstead/cloudos.git   # get the code
     cd cloudos
