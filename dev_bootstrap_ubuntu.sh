@@ -15,10 +15,10 @@ apt-get install -y memcached redis-server postgresql daemon unzip
 # Create dev/test databases and users, set passwords
 for user in $(whoami) cloudos cloudos_dns wizard_form ; do
   sudo -u postgres -H createuser --createdb ${name}
-  sudo -u postgres -H bash -c "echo \"alter user ${user} with password '${user}'\" | psql -U postgres"
   for name in ${user} ${user}_test ; do
     sudo -u postgres -H createdb ${name}
   done
+  sudo -u postgres -H bash -c "echo \"alter user ${user} with password '${user}'\" | psql -U postgres"
 done
 
 # Set passwords for db users (needed to generate schemas).
