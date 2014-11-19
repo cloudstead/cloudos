@@ -3,8 +3,6 @@
 BASE=$(cd $(dirname $0) && pwd)
 cd ${BASE}
 
-./setenv.sh
-
 cd $(cd $(dirname $0) && pwd)
 git submodule init
 git submodule update
