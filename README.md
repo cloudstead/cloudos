@@ -31,7 +31,7 @@ Build *everything*:
 
 To build only the cloudos code (exclude the libraries that rarely change), just drop the `-P complete` and run this from the top-level cloudstead-uber directory:
 
-    mvn -DskipTests=true install
+    mvn -DskipTests=true install    # or omit -DskipTests flag if you want to run tests (requires dev env)
 
 To build a single module, just cd into its directory run the above command.
 
