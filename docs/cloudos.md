@@ -47,7 +47,8 @@ Also ensure you have appropriate credentials for the various required [third par
             * Ensure `admin.name` matches `dns.user` defined in `cloudos/init.json`
       
 * For `email/init.json`:
-      * In the `smtp_relay` section set `username` and `password` to your SendGrid username and password.
+    * In the `smtp_relay` section set `username` and `password` to your SendGrid username and password.
+    * If you are not using SendGrid, then set all the fields (`username`, `password`, `host` and `port`) to the values for the SMTP relay you are using.  
 
 * Copy the SSL certificate and key into the `my_init_files/certs/cloudos` directory. Name the private key file `ssl-https.key` and the public certificate file `ssl-https.pem` 
   * These should be wildcard certificates for the `hostname`.`parent_domain` (from `cloudos/base.json`). They will be installed on your new CloudOs instance to enable SSL over all HTTP connections.

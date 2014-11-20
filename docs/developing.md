@@ -57,6 +57,14 @@ Once you've run the install with `-P complete`, future builds can omit this flag
 files outside the main cloudos modules. Look at the top-level pom.xml to see which modules are 
 included in the complete profile.  
 
+## Bundle the apps
+
+Much of the magic of cloudstead comes from our simple app bundling scheme. To deploy a new cloudstead, you will need
+run the app bundler at least once to initialize the application bundles.
+
+    cd cloudos-apps
+    ./prep-deploy.sh
+
 ## Designate a staging host for packages
 
 You will need a server that you can copy files to, and then retrieve via HTTP.
