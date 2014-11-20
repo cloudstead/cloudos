@@ -1,7 +1,19 @@
 cloudos
 =======
 
-An uber-repository that includes everything needed to launch cloudos instances
+An uber-repository that includes everything needed to launch cloudos instances.
+
+## Launching
+
+So you want to launch a CloudOs instance? Excellent. The basic steps are:
+* Prepare external services (gather credentials for DNS, SSL, SMTP, S3 storage)
+* Set up initialization files: SSL certs and JSON data bags
+* Prepare a target machine
+* Deploy CloudOs to target machine
+
+## Developing on CloudOs
+
+Start with the [basic setup](docs/developing.md) to 
 
 ## Get the build tools
 
@@ -16,9 +28,9 @@ For Ubuntu:
 
 ## Setup the code
 
-    git clone https://github.com/cloudstead/cloudos.git   # get the code
+    git clone https://github.com/cloudstead/cloudos.git # get the code
     cd cloudos
-    ./first_time_dev_setup.sh                             # setup git submodules, install parent pom
+    ./first_time_dev_setup.sh                           # setup git submodules, install parent pom
 
 If you want to run the tests, follow the steps to [set up a full development environment](developing.md)
 

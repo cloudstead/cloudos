@@ -10,7 +10,7 @@ if [ $(whoami) != "root" ] ; then
   exit $?
 fi
 
-apt-get install -y memcached redis-server postgresql daemon unzip
+apt-get install -y memcached redis-server postgresql daemon unzip npm
 
 # Create dev/test databases and users, set passwords
 for user in $(whoami) cloudos cloudos_dns wizard_form ; do
@@ -54,3 +54,12 @@ cd ${KESTREL_HOME} && \
   echo "Kestrel successfully installed." && \
   sudo _JAVA_OPTIONS=-Djava.net.preferIPv4Stack=true ${KESTREL_HOME}/current/scripts/devel.sh & \
   sleep 2s && echo "Kestrel successfully started: $(ps auxwww | grep kestrel_ | grep -v grep)"
+
+# Install bcrypt
+npm install -g bcryptjs
+BCRYPT=/usr/local/lib/node_modules/bcryptjs/bin/bcrypt
+TMP=$(mktemp /tmp/bcrypt.XXXXXX) || die "Error creating temp file"
+cat ${BCRYPT} | tr -d '\r' > ${TMP}
+cat ${TMP} > ${BCRYPT}
+chmod a+rx ${BCRYPT}
+ln -s ${BCRYPT} /usr/local/bin/bcrypt

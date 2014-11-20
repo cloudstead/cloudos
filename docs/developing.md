@@ -1,42 +1,60 @@
 # Setting up a development environment
 
-## Prerequisites
-* git
-* java 7
-* maven 3
-* PostgreSQL 9.x
-* node
-* npm
-* lineman
-* VirtualBox
+## Get the build tools
 
-If you're running on Ubuntu, you can install the prerequisites with:
+You'll need git, maven, nodejs, npm, and lineman
+
+For Ubuntu:
 
     sudo apt-get update
-    sudo apt-get install -y git openjdk-7-jdk maven postgresql node npm 
-    sudo npm install -g lineman
-
-You'll also need to make sure a few other first-time-only things are attended to:
-
-    # If node is missing but nodejs is there, symlink to that
-    if [ ! -f /usr/bin/node ] ; then sudo ln -s /usr/bin/nodejs /usr/bin/node ; fi
+    sudo apt-get install -y git openjdk-7-jdk maven npm
+    sudo npm install -g lineman                # lineman builds the frontend emberjs UI
+    sudo ln -s /usr/bin/nodejs /usr/bin/node   # lineman looks for node here
     
 ## Get the source code
 
-    git clone https://github.com/cloudstead/cloudos.git
-
-## Installation
-
+    git clone https://github.com/cloudstead/cloudos.git # get the code
     cd cloudos
-    ./first_time_dev_setup.sh                   # this will update all the submodules
-    mvn -DskipTests=true -P complete install    # builds and installs all jars
+    ./first_time_dev_setup.sh                           # setup git submodules, install parent pom
+    ./dev_bootstrap_ubuntu.sh                           # install memcached, redis, databases, Kestrel MQ, and bcrypt
+     
+If you're not using Ubuntu, in place of the dev_bootstrap_ubuntu.sh script, you should:
+* Install PostgreSQL, memcached, Redis server, Kestrel MQ, all with default installation options, running on standard ports 
+* Create databases named (use PostgreSQL's createdb): cloudos, cloudos_test, cloudos_dns, cloudos_dns_test, wizard_form, and wizard_form_test 
+* Create databases users with the names: cloudos, cloudos_dns, wizard_form. With their passwords the same as their username
+* Install a bcrypt command line tool
 
-If the last command above has an error (likely something like "OutOfMemoryError: PermGen space"), just run it again. 
+### The Kestrel MQ
+    
+The `dev_bootstrap_ubuntu.sh` script installs and starts the Kestrel message queue (MQ), which is needed for some of the tests.
+If Kestrel is not running and you want to start it, run:
+
+    sudo _JAVA_OPTIONS=-Djava.net.preferIPv4Stack=true ${KESTREL_HOME}/current/scripts/devel.sh &
+
+To stop the Kestrel MQ, simply kill its PID:
+
+     sudo kill $(ps auxwww | grep kestrel_ | grep -v grep | awk '{print $2}')
+
+
+## Building
+
+Build *everything*:
+
+    mvn -DskipTests=true -P complete install   # just build it
+    mvn -P complete install                    # run the tests too (make sure all dev tools are installed)
+
+To build only the cloudos code (exclude the libraries that rarely change), just drop the `-P complete` and run this from the top-level cloudstead-uber directory:
+
+    mvn -DskipTests=true install    # or omit -DskipTests flag if you want to run tests (requires dev env)
+
+To build a single module, just cd into its directory run the above command.
+
+If the build has an error like "OutOfMemoryError: PermGen space", just run it again. 
 It won't have as much to do the second time around and should complete. Alternatively you can adjust the 
-memory settings with various options in the M2_OPTS environment variable.
+memory settings with various options in the MAVEN_OPTS environment variable. For example `export MAVEN_OPTS=-Xmx2048m`
  
 Once you've run the install with `-P complete`, future builds can omit this flag, unless you are changing 
-files outside the main cloudos modules. Look at the pom.xml in cloudstead-uber to see which modules are 
+files outside the main cloudos modules. Look at the top-level pom.xml to see which modules are 
 included in the complete profile.  
 
 ## Designate a staging host for packages
@@ -45,7 +63,7 @@ You will need a server that you can copy files to, and then retrieve via HTTP.
 
 If your staging server supports ssh, run:
 
-    /path/to/cloudstead-uber/prep.sh no-gen-sql user@host:/path/to/packages/dir
+    /path/to/cloudos/prep.sh user@host:/path/to/packages/dir
     
 This will build all packages and copy them to the dir above. You will probably want to setup SSH keys for user@host so
 that you're not prompted for your password to copy each package.
