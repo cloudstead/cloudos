@@ -5,49 +5,58 @@ With so much configuration information flying around, it can be hard to keep tra
 ----
 ## Registration
 ### actor: end user (on public website)
-A registration for a new user on the public website (www.cloudstead.io) gives us:
+A registration for a new user on the public website (www.cloudstead.io) provides Cloudstead with:
 
+   * name: your first and last name
    * email address: the cloudos instance will send an email here after it has set itself up
-   * mobile phone: to be used with two-factor authentication for the account on cloudstead.io
+   * mobile phone: can be used with two-factor authentication for the account on cloudstead.io
    * password: when the user clicks on the link in the email after cloudos setup, this will be the "original password" they need to change, to set a cloudos-specific password. it's passed to the cloudos in bcrypted form, and then deleted after the password's been matched an a new one has been set.
 
-This information is stored in the cloudstead database and can be used to launch new CloudOs instances.
+This information is stored in the Cloudstead database and is used to launch new CloudOs instances. 
+This is the only data that will be stored on servers that you do not have sole control over. 
+You can delete your Cloudstead account at any time.
 
 ----
 ## New CloudOs Request
 ### actor: end user (on public website)
 On public website (www.cloudstead.io), a CloudOsRequest consists of the following:
 
-   * name: The simple hostname (not FQDN) of the cloudOs instance
+   * name: The simple hostname (not FQDN) of the cloudos instance
+   * edition: The "size" of the hostname. Determines how much horsepower will be running.
+   * region: Where it will run. Specifically, which cloud provider and which region within that provider's network.
+   * apps: Which apps be pre-installed on the instance.
 
-A name of "newco" would bring up a cloudstead with the hostname "newco.cloudstead.io". The domain (in this case, cloudstead.io) comes from the value of the `CLOUDOS_PARENT_DOMAIN` env var in the shell that started the cloudstead-server.
+A name of "newco" would bring up a cloudstead with the hostname "newco.cloudstead.io". 
+The domain (in this case, cloudstead.io) comes from the cloudstead server.
 
 ----
 ## Server-side CloudOs Fulfillment
 ### actor: cloudstead-server (public website)
 When launching a cloudos instance, a cloudstead-server will:
 
-* Creates fresh credentials for AWS (IAM user), Sendgrid, and cloudos-dns
+* Creates fresh credentials for AWS (IAM user), Sendgrid, and others
 * Create the initial databags for the instance
 * Copies the databags and SSL certs the instance, and starts the chef run
 
-*From end-user's CloudOsRequest:*
+*Set using data from your Cloudstead profile or the CloudOsRequest:*
 
-   * cloudos/init.json: base.hostname (same as name above)
-   * cloudos/init.json: cloudos.recovery\_email (same as user's email at registration)
+   * cloudos/base.json: hostname ("newco" in the example above)
+   * cloudos/init.json: recovery\_email (email used at registration)
+   * cloudos/init.json: admin\_initial\_pass (the bcrypted hash of your password, use this (along with a random key the cloudos emails once setup) to unlock the cloudos instance)
 
 *Set at launch time by public server:*
 
-   * cloudos/init.json: cloudos.run_as (currently hardcoded to 'cloudos')
-   * cloudos/init.json: cloudos.admin\_initial\_pass (the bcrypted hash of the user's password on cloudstead.io, this will be their initial password on the cloudos instance)
-   * cloudos/init.json: base.parent\_domain (set by public website, for example cloudstead.io)
-   * cloudos/init.json: cloudos.aws\_iam\_user (the IAM user with perms to read/write from a subdir of the bucket. IAM username is a hash of the public-site-user-account's uuid + the cloudos name + salt)
-   * cloudos/init.json: cloudos.aws\_access\_key (access key for the IAM user, with perms to read/write from a subdir of the bucket)
-   * cloudos/init.json: cloudos.aws\_secret\_key (access key for the IAM user, with perms to read/write from a subdir of the bucket)
-   * cloudos/init.json: cloudos.s3\_bucket (bucket where the IAM user can read/write from a subdir of the bucket that matches their IAM user name)
-   * cloudos/init.json: cloudos.authy.username (API key for authy, shared among all instances, must be changed before SSH access is allowed)
-   * cloudos/init.json: cloudos.dns.username (username for cloudos-dns, generated at launch-time)
-   * cloudos/init.json: cloudos.dns.password (password for cloudos-dns, generated at launch-time)
+   * cloudos/base.json: parent\_domain (for example, cloudstead.io)
+   * cloudos/init.json: run_as (hardcoded to 'cloudos')
+   * cloudos/init.json: aws\_iam\_user (the IAM user with perms to read/write from a subdir of the bucket. IAM username is a hash of the public-site-user-account's uuid + the cloudos name + salt)
+   * cloudos/init.json: aws\_access\_key (access key for the IAM user, with perms to read/write from a subdir of the bucket)
+   * cloudos/init.json: aws\_secret\_key (access key for the IAM user, with perms to read/write from a subdir of the bucket)
+   * cloudos/init.json: s3\_bucket (bucket where the IAM user can read/write from a subdir of the bucket that matches their IAM user name)
+   * cloudos/init.json: authy.user (API key for authy, shared among all instances, must be changed before SSH access is allowed)
+   * cloudos/init.json: appstore.user (UCID for the app store, generated at launch-time)
+   * cloudos/init.json: appstore.base\_uri (API endpoint for app store)
+   * cloudos/init.json: dns.user (username for cloudos-dns, generated at launch-time)
+   * cloudos/init.json: dns.password (password for cloudos-dns, generated at launch-time)
    * email/init.json: smtp_relay.username (Sendgrid credentials, generated at launch-time)
    * email/init.json: smtp_relay.password (Sendgrid credentials, generated at launch-time)
 
@@ -60,11 +69,11 @@ When launching a cloudos instance, a cloudstead-server will:
 ### actor: cloudos-chef (on cloudos instance)
 When chef-solo runs, it uses the above config as follows:
 
-  * cloudos/init.json: base.hostname -- along with parent\_domain, determines the FQDN of the machine
-  * cloudos/init.json: base.parent_domain -- along with hostname, determines the FQDN of the machine
-  * cloudos/init.json: cloudos.run\_as -- this is the unix user that the java server will run as
-  * cloudos/init.json: cloudos.recovery\_email -- see below, upon successful chef run, a setup link is sent to this address. it is also saved to ~/.first\_time\_setup (deleted after setup)
-  * cloudos/init.json: cloudos.admin\_initial\_pass -- saved in ~/.first\_time\_setup (after the user changes their password at first-time setup, this file is deleted)
+  * cloudos/base.json: hostname -- along with parent\_domain, determines the FQDN of the machine
+  * cloudos/base.json: parent_domain -- along with hostname, determines the FQDN of the machine
+  * cloudos/init.json: run\_as -- this is the unix user that the java server will run as
+  * cloudos/init.json: recovery\_email -- see below, upon successful chef run, a setup link is sent to this address. it is also saved to ~/.first\_time\_setup (deleted after setup)
+  * cloudos/init.json: admin\_initial\_pass -- saved in ~/.first\_time\_setup (after the user changes their password at first-time setup, this file is deleted)
 
 *The following are written to ~/.cloudos.env (sourced by jrun when launching the java server):*
 
@@ -74,13 +83,15 @@ When chef-solo runs, it uses the above config as follows:
 ## CloudOs Setup: Java Server Configuration
 ### actor: cloudos-server (on cloudos instance)
 When the java server runs, jrun sources ~/.cloudos.env
-In the listing below, most variables are taken verbatim from cloudos-init.json (written to ~/.cloudos.env at chef-time as a template resource)
+In the listing below, most variables are taken verbatim from the json files
 The exceptions are:
 * fqdn = base.hostname + "." + base.parent_domain
 * data_key = generated randomly on the host
 
 #### How the config is made accessible to code running within the Java server
-The ~/.cloudos.env file is used to substitute environment variables into api-config.yml (jar: /api-config.yml, source: src/main/resources). This yaml file is read in when the Java server starts, and populates an instance of the McApiConfiguration class, which is then exposed as a Spring bean.
+The ~/.cloudos.env file is used to substitute environment variables into cloudos-config.yml (jar: /cloudos-config.yml, source: src/main/resources). 
+This yaml file is read in when the Java server starts, and populates an instance of the CloudOsConfiguration class, which is then exposed as 
+a Spring bean to the rest of the code.
 
     # If we need to display/email a URL back to ourselves, this is what it starts with
     export PUBLIC_BASE_URI=https://<%=@fqdn%>

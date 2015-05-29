@@ -12,3 +12,4 @@ target/test-classes
 target/maven-archiver
 target
 .DS_Store
+docs/wip/

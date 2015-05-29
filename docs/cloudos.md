@@ -30,6 +30,7 @@ Also ensure you have appropriate credentials for the various required [third par
       * Set `aws_access_key` and `aws_secret_key` to the credentials for this IAM user
       * Set `s3_bucket` to the bucket that you created above
       * In the `authy` section set `user` to your Authy API key
+      * In the `appstore` section set `user` to a UCID registered with the App Store 
       * In the `dns` section:
         * If you're using Dyn for DNS management:
           * Remove `base_uri`, or set its value to be the empty string

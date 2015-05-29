@@ -27,7 +27,11 @@ The metadata.json file contains a JSON object like this:
 
     {
       "active_version": "name-of-active-version",
-      "installed_by": "account-name"
+      "installed_by": "account-name",
+      "interactive": true
     }
 
 If active_version is not present, or its value does not refer to a valid version, then the app will be disabled
+The interactive field tells CloudOs whether the app has any web-accessible interfaces. Most apps will be interactive.
+There are a handful of pure server-side apps that are not interactive, for example the email, web and database subsystems.
+

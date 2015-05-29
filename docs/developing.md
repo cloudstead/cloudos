@@ -79,7 +79,7 @@ Also make sure the destination above is accessible via HTTP (or move them to an 
  
 If your staging server does not support ssh, create a directory to hold the packages, say /opt/cloudos-packages, and run:
 
-    /path/to/cloudstead-uber/prep.sh /opt/cloudos-packages
+    /path/to/cloudos/prep.sh /opt/cloudos-packages
     
 Now copy the contents of that directory (via FTP, thumb drive, or carrier pigeon) to someplace they will be accessible via HTTP.
 
