@@ -13,7 +13,7 @@ fi
 apt-get install -y memcached redis-server postgresql daemon unzip npm
 
 # Create dev/test databases and users, set passwords
-for user in $(whoami) cloudos cloudos_dns wizard_form ; do
+for user in $(whoami) cloudos cloudos_dns wizard_form ${CLOUDSTEAD_ADDITIONAL_DBS} ; do
   sudo -u postgres -H createuser ${user}
   for name in ${user} ${user}_test ; do
     sudo -u postgres -H createdb ${name}

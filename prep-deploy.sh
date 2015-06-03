@@ -3,17 +3,18 @@
 # Package up code so it can be used during deployment, either as server-side webapps or cloudos app bundles.
 #
 # Usage:
-#   prep-deploy.sh [no-gen-sql] <app-name>
+#   prep-deploy.sh [gen-sql] <artifact-type>
 #
-# If no-gen-sql is the first argument, then no SQL schema generation will occur.
+# If gen-sql is the first argument, then SQL schema generation will occur during the deployment.
 #
 # Examples:
 #   prep-deploy.sh cloudos-server     # create the cloudos-server.tar.gz tarball 
 #   prep-deploy.sh cloudos-apps       # create the various app tarballs
 #
 # Care must be taken when editing this file -- the "prep.sh" script (which calls prep-deploy.sh on each 
-# deployable component) expects ALL output to stdout to be names of artifacts (file paths) that should be 
-# rsync'd to the remote host. If you need to "echo" something, please echo to stderr (echo 1>&2 "log something") 
+# deployable component) expects ALL output to stdout prefixed with "ARTIFACT: " to be names of artifacts
+# (file paths) that should be copied to the destination (host or dir). If you need to "echo" something,
+# please echo to stderr (echo 1>&2 "log something"), or do not
 #
 
 function die () {
@@ -21,40 +22,40 @@ function die () {
   exit 1
 }
 
-NO_GEN_SQL=""
-if [ "${1}" = "no-gen-sql" ] ; then
-  NO_GEN_SQL="${1}"
+GEN_SQL=""
+if [ "${1}" = "gen-sql" ] ; then
+  GEN_SQL="${1}"
   shift
 fi
 
-APP=${1}
-if [ -z ${APP} ] ; then
-  die "Usage: $0 <app>"
+ARTIFACT=${1}
+if [ -z ${ARTIFACT} ] ; then
+  die "Usage: $0 <artifact-type>"
 fi
 
 BASE=$(cd $(dirname $0) && pwd)
-APP_DIR=$(find ${BASE}/ -maxdepth 3 -type d -name ${APP} | grep -v '.git/' | grep -v '/apps/' | grep -v '/target/')
-if [ -z ${APP_DIR} ] ; then
-  die "App does not exist: ${APP}"  # should never happen
+ARTIFACT_DIR=$(find ${BASE}/ -maxdepth 3 -type d -name ${ARTIFACT} | grep -v '.git/' | grep -v '/apps/' | grep -v '/target/')
+if [ -z ${ARTIFACT_DIR} ] ; then
+  die "Artifact dir not found for ${ARTIFACT}"  # should never happen
 fi
 
-cd ${APP_DIR}
-DEPLOY=target/${APP}
+cd ${ARTIFACT_DIR}
+DEPLOY=target/${ARTIFACT}
 
 # If this has a src/main/resources/spring.xml file, treat it like a web app
 IS_SERVER=0
-if [ -f ${APP_DIR}/src/main/resources/spring.xml ] ; then
+if [ -f ${ARTIFACT_DIR}/src/main/resources/spring.xml ] ; then
   IS_SERVER=1
 fi
 
 if [ ${IS_SERVER} -eq 1 ] ; then
 
-    APP_NAME="$(grep artifactId pom.xml | head -2 | grep ${APP} | tr '<>' '  ' | awk '{print $2}')"
-    DEPLOY=target/${APP_NAME}
-    JAR_MATCH="${APP_NAME}*.jar"
+    ARTIFACT_NAME="$(grep artifactId pom.xml | head -2 | grep ${ARTIFACT} | tr '<>' '  ' | awk '{print $2}')"
+    DEPLOY=target/${ARTIFACT_NAME}
+    JAR_MATCH="${ARTIFACT_NAME}*.jar"
 
     if [[ ! -d target || $(find target -type f -name "${JAR_MATCH}" | wc -l | tr -d ' ') -eq 0 ]] ; then
-      echo 1>&2 "${APP} jar not found, building it"
+      echo 1>&2 "${ARTIFACT} jar not found, building it"
       mvn -DskipTests=true clean package 1>&2
     fi
 
@@ -63,7 +64,7 @@ if [ ${IS_SERVER} -eq 1 ] ; then
       die "Multiple jars found: $(find target -type f -name ${JAR_MATCH})"
     fi
     if [ ${NUM_JARS} -eq 0 ] ; then
-      echo 1>&2 "Error building ${APP}."
+      echo 1>&2 "Error building ${ARTIFACT}."
       exit 1
     fi
 
@@ -79,10 +80,9 @@ if [ ${IS_SERVER} -eq 1 ] ; then
     elif [ -d src/main/resources/static ] ; then
         mkdir -p ${DEPLOY}/site
         cp -R src/main/resources/static/* ${DEPLOY}/site
-
     fi
 
-    if [[ -x gen-sql.sh ]] && [[ -z ${NO_GEN_SQL} ]] ; then
+    if [[ -x gen-sql.sh && ! -z "${GEN_SQL}" ]] ; then
       GEN_SQL_LOG=$(mktemp /tmp/gen-sql.XXXXXXX)
       ./gen-sql.sh silent 2>&1 > ${GEN_SQL_LOG}
       if [ $? -ne 0 ] ; then
@@ -103,16 +103,17 @@ if [ ${IS_SERVER} -eq 1 ] ; then
 fi
 
 # Delegate to app-specific stuff
-if [ -f ${APP_DIR}/prep-deploy.sh ] ; then
-  ${APP_DIR}/prep-deploy.sh ${DEPLOY}
+if [ -f ${ARTIFACT_DIR}/prep-deploy.sh ] ; then
+  ${ARTIFACT_DIR}/prep-deploy.sh ${DEPLOY}
 
 else
-  echo 1>&2 "No app found in ${APP_DIR}"
+  echo 1>&2 "No deployable artifacts found in ${ARTIFACT_DIR}"
   exit 1
 fi
 
 if [ ${IS_SERVER} -eq 1 ] ; then
     # Non-servers do their own packaging
-    cd target && tar czf ${APP_NAME}.tar.gz ${APP_NAME}
-    echo ${APP_DIR}/target/${APP_NAME}.tar.gz
+    ARTIFACT_ARCHIVE="${ARTIFACT_NAME}.tar.gz"
+    cd target && tar czf ${ARTIFACT_ARCHIVE} ${ARTIFACT_NAME}
+    echo "ARTIFACT: ${ARTIFACT_DIR}/target/${ARTIFACT_ARCHIVE}"
 fi

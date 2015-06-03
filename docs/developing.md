@@ -8,8 +8,9 @@ For Ubuntu:
 
     sudo apt-get update
     sudo apt-get install -y git openjdk-7-jdk maven npm
-    sudo npm install -g lineman                # lineman builds the frontend emberjs UI
     sudo ln -s /usr/bin/nodejs /usr/bin/node   # lineman looks for node here
+    sudo npm install -g lineman                # lineman builds the frontend emberjs UI
+    sudo rm -rf ~/tmp                          # remove temp dir owned by root
     
 ## Get the source code
 

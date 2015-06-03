@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Don't run this script directly. It is called by the first_time_dev_setup.sh script
+#
 
 BASE=$(cd $(dirname $0) && pwd)
 cd ${BASE}
