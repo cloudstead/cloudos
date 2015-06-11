@@ -32,7 +32,7 @@ On Ubuntu:
     cd cloudos
     ./first_time_dev_setup.sh                           # setup git submodules, install parent pom
 
-If you want to run the tests, follow the steps to [set up a full development environment](developing.md)
+If you want to run the tests, follow the steps to [set up a full development environment](docs/developing.md)
 
 ## Build it
 
@@ -62,4 +62,4 @@ This will:
 * Build the app bundles in cloudos-apps
 * copy them to the target, perhaps where they can be publicly accessed by cloudsteads that are deploying/updating apps/etc.
 
-Now you're ready to [launch a new CloudOs instance!](cloudos.md)
+Now you're ready to [launch a new CloudOs instance!](docs/cloudos.md)
