@@ -2,7 +2,7 @@
 
 ## Get the build tools
 
-You'll need git, maven, nodejs, npm, and lineman
+You'll need java, git, maven, nodejs, npm, and lineman
 
 For Ubuntu:
 
@@ -17,7 +17,7 @@ For Ubuntu:
     git clone https://github.com/cloudstead/cloudos.git # get the code
     cd cloudos
     ./first_time_dev_setup.sh                           # setup git submodules, install parent pom
-    ./dev_bootstrap_ubuntu.sh                           # install memcached, redis, databases, Kestrel MQ, and bcrypt
+    ./dev_bootstrap_ubuntu.sh                           # setup memcached, redis, databases, Kestrel MQ, and bcrypt
      
 If you're not using Ubuntu, in place of the dev_bootstrap_ubuntu.sh script, you should:
 * Install PostgreSQL, memcached, Redis server, Kestrel MQ, all with default installation options, running on standard ports 
@@ -34,8 +34,7 @@ If Kestrel is not running and you want to start it, run:
 
 To stop the Kestrel MQ, simply kill its PID:
 
-     sudo kill $(ps auxwww | grep kestrel_ | grep -v grep | awk '{print $2}')
-
+    sudo kill $(ps auxwww | grep kestrel_ | grep -v grep | awk '{print $2}')
 
 ## Building
 
@@ -60,20 +59,16 @@ included in the complete profile.
 
 ## Bundle the apps
 
-Much of the magic of cloudstead comes from our simple app bundling scheme. To deploy a new cloudstead, you will need
-run the app bundler at least once to initialize the application bundles.
+In order to setup a CloudOs instance, you'll need to push some artifacts to a server where the install process 
+will fetch them.
 
-    cd cloudos-apps
-    ./prep-deploy.sh
+The `prep.sh` script is used for this purpose. To prepare all the artifacts:
 
-## Designate a staging host for packages
+    cd ~/cloudos
+    ./prep.sh all user@deploy-host:/path/to/htdocs/deploy/dir
 
 You will need a server that you can copy files to, and then retrieve via HTTP.
 
-If your staging server supports ssh, run:
-
-    /path/to/cloudos/prep.sh user@host:/path/to/packages/dir
-    
 This will build all packages and copy them to the dir above. You will probably want to setup SSH keys for user@host so
 that you're not prompted for your password to copy each package.
 Also make sure the destination above is accessible via HTTP (or move them to an accessible location after copying them).
@@ -83,6 +78,10 @@ If your staging server does not support ssh, create a directory to hold the pack
     /path/to/cloudos/prep.sh /opt/cloudos-packages
     
 Now copy the contents of that directory (via FTP, thumb drive, or carrier pigeon) to someplace they will be accessible via HTTP.
+
+Once the artifacts have been copied to the remote host, verify you can fetch them with wget or curl:
+
+    wget -S -O /dev/null http://deploy-host/deploy/dir/artifact.tar.gz
 
 ## Setup Supporting Services
 

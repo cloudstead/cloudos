@@ -60,6 +60,9 @@ fi
 
 # Last argument is the deploy target
 TARGET="$(echo ${@} | awk 'NF>1{print $NF}')" # grab the last word
+if [ -z "${TARGET}" ] ; then
+  die "No target given. Usage: prep.sh [gen-sql] [all|artifact-type1 artifact-type2 ...] [user@remote-host:]/some/path"
+fi
 
 # Artifact types are everything BUT the last word, remove it
 artifact_types="$(echo ${@} | sed -e 's,[-A-Za-z0-9@:./]*$,,')" # remove last "word" from list, which could be user@example.com:/path
@@ -69,11 +72,6 @@ single_type=$(echo ${artifact_types} | tr -d ' ')
 
 if [[ -z "${single_type}" || "${single_type}" = "all" ]] ; then
   artifact_types=$(all_artifact_types)
-fi
-
-if [ -z "${TARGET}" ] ; then
-  echo "No target given. prep.sh [gen-sql] [user@remote-host:]/some/path [all|list|artifact-type1 artifact-type2 ...]"
-  exit 1
 fi
 
 # Split artifact_types into "servers" and "apps" so we can do servers first (they may generate SQL files/artifacts for inclusion into apps)

@@ -13,13 +13,13 @@ So you want to launch a CloudOs instance? Excellent. The basic steps are:
 
 ## Developing on CloudOs
 
-Start with the [basic setup](docs/developing.md) to 
+Start with the [basic setup](docs/developing.md) to set up a fresh development environment.
 
 ## Get the build tools
 
-git, maven, nodejs, npm, lineman
+CloudOs requires the following build tools: java, git, maven, nodejs, npm, lineman
 
-For Ubuntu:
+On Ubuntu:
 
     sudo apt-get update
     sudo apt-get install -y git openjdk-7-jdk maven npm
@@ -34,7 +34,7 @@ For Ubuntu:
 
 If you want to run the tests, follow the steps to [set up a full development environment](developing.md)
 
-## Building
+## Build it
 
 Build *everything*:
 
@@ -47,7 +47,7 @@ To build only the cloudos code (exclude the libraries that rarely change), just 
 
 To build a single module, just cd into its directory run the above command.
 
-## Preparing for a deploy
+## Prepare to launch
 
 Run:
 `./prep.sh /some/local/path`
@@ -61,3 +61,5 @@ This will:
 * Build the tarball for the cloudos-server
 * Build the app bundles in cloudos-apps
 * copy them to the target, perhaps where they can be publicly accessed by cloudsteads that are deploying/updating apps/etc.
+
+Now you're ready to [launch a new CloudOs instance!](cloudos.md)
