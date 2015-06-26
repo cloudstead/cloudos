@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Build deployable artifacts and rsync them to a remote host
+# Build deployable artifacts and copy them to a folder or remote host
 #
 # Usage:
 #   prep.sh [gen-sql] [all|artifact-type1 artifact-type2 ...] [user@remote-host:]/some/path
