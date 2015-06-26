@@ -16,3 +16,6 @@
 [submodule "cloudos-apps"]
 	path = cloudos-apps
 	url = https://github.com/cloudstead/cloudos-apps.git
+[submodule "handy-toolbox"]
+	path = handy-toolbox
+	url = git@github.com:cloudstead/handy-toolbox.git
