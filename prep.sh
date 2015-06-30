@@ -59,7 +59,7 @@ if [ "${1}" = "gen-sql" ] ; then
 fi
 
 # Last argument is the deploy target
-TARGET="$(echo ${@} | awk 'NF>1{print $NF}')" # grab the last word
+TARGET="$(echo ${@} | awk '{print $NF}')" # grab the last word
 if [ -z "${TARGET}" ] ; then
   die "No target given. Usage: prep.sh [gen-sql] [all|artifact-type1 artifact-type2 ...] [user@remote-host:]/some/path"
 fi
