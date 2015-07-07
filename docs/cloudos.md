@@ -1,4 +1,5 @@
-# Building a new CloudOs instance
+Launching a new cloudstead
+==========================
 
 First, follow the instructions in the [previous section](developing.md) to build the cloudos-server.tar.gz package. This will be needed
 when the deployer installs the cloudos app bundle.
