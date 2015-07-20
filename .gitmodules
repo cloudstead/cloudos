@@ -19,3 +19,6 @@
 [submodule "handy-toolbox"]
 	path = handy-toolbox
 	url = git@github.com:cloudstead/handy-toolbox.git
+[submodule "cloudos-launcher"]
+	path = cloudos-launcher
+	url = git@github.com:cloudstead/cloudos-launcher.git
