@@ -11,10 +11,8 @@
 #   prep-deploy.sh cloudos-server     # create the cloudos-server.tar.gz tarball 
 #   prep-deploy.sh cloudos-apps       # create the various app tarballs
 #
-# Care must be taken when editing this file -- the "prep.sh" script (which calls prep-deploy.sh on each 
-# deployable component) expects ALL output to stdout prefixed with "ARTIFACT: " to be names of artifacts
-# (file paths) that should be copied to the destination (host or dir). If you need to "echo" something,
-# please echo to stderr (echo 1>&2 "log something"), or do not
+# The "prep.sh" script (which calls prep-deploy.sh on each deployable component) expects
+# that any line that starts with "ARTIFACT: " is the path to an artifact.
 #
 # The way that a particular artifact-type builds its artifacts can be customized by adding a prep-deploy.env
 # file in the same directory as the local prep-deploy.sh script.
