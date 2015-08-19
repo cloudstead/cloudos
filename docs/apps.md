@@ -1,6 +1,6 @@
 # Application Management under CloudOs
 
-The better part of CloudOs is devoted to managing and facilitating the applications you run on it.
+An important part of CloudOs is managing and facilitating the applications you run on it.
 
 There are many different applications. For the purposes of this document, they're all the same to us, but they
 can exist in different states. For example:
