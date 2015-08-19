@@ -37,6 +37,8 @@ To launch a new cloudstead that will use Dyn for DNS management:
 
 ### After launching the cloudstead
 
+If you have an existing cloudstead that you'd like to use this DNS scheme with:
+
 Via the CloudOs web interface:
 
    * Login to your CloudOs as a user with Admin privileges
@@ -87,6 +89,8 @@ To launch a new cloudstead that will use djbdns for DNS management:
 
 #### After launching the cloudstead
 
+If you have an existing cloudstead that you'd like to use this DNS scheme with:
+
 Via the CloudOs web interface:
 
    * Login to your CloudOs as a user with Admin privileges
@@ -121,9 +125,13 @@ To launch a new cloudstead that will use djbdns for DNS management:
 
 #### After launching the cloudstead
 
+If you have an existing cloudstead and you'd like to use this DNS scheme with:
+
 Via the CloudOs web interface:
 
    * Login to your CloudOs as a user with Admin privileges
+   * In the top-right of the CloudOs taskbar, click Settings (the gears icon) and select "App Store"
+       * Install the cloudos-dns and djbdns apps, or upgrade them to the latest version
    * In the top-right of the CloudOs taskbar, click Settings (the gears icon) and select "System Settings"
    * Select the "App Settings" tab
    * Select the "cloudos" app
