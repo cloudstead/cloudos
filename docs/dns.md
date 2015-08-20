@@ -81,11 +81,15 @@ records.
 To launch a new cloudstead that will use djbdns for DNS management:
 
    * When using the Cloudstead Launcher, fill out the "external DNS" section in the DNS tab.
-   * When launching manually, edit the `data_bags/cloudos/init.json` file in your `init_files` directory. 
-       * Remove `base_uri`, or set its value to be the empty string
-       * Set `user` to the cloudos-dns username you created
-       * Set `password` to that user's password 
-       * Set `base_uri` to the base URL of your cloudos-dns server
+   * When launching manually:
+       * Edit the `data_bags/cloudos/init.json` file in your `init_files` directory. Edit the `dns` block (or add one if not present). 
+          * Remove `base_uri`, or set its value to be the empty string
+          * Set `user` to the cloudos-dns username you created
+          * Set `password` to that user's password
+          * Set `base_uri` to the base URL of your cloudos-dns server
+       * Edit the `data_bags/cloudos/base.json` file
+          * Set `hostname` to the name of the cloudos-dns user you created
+          * Set `parent_domain` to the DNS zone for the cloudos-dns user you created
 
 #### After launching the cloudstead
 
