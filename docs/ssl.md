@@ -29,9 +29,9 @@ With these validations in place, I can now use their "Certificates Wizard" to re
 
 #### Generate a Private Key and CSR
 
-    $ openssl genrsa -out ~/cloudstead/keys/curiouskidsbooks.com.key 2048
+    $ openssl genrsa -out ~/cloudstead/keys/example.com.key 2048
     
-    $ openssl req -new -sha256 -key ~/cloudstead/keys/curiouskidsbooks.com.csr.key -out ~/cloudstead/keys/curiouskidsbooks.com.csr
+    $ openssl req -new -sha256 -key ~/cloudstead/keys/example.com.key -out ~/cloudstead/keys/example.com.csr
     
     You are about to be asked to enter information that will be incorporated
     into your certificate request.
