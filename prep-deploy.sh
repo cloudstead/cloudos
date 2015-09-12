@@ -74,7 +74,8 @@ if [ ${IS_SERVER} -eq 1 ] ; then
 
     if [[ ! -d target || $(find target -maxdepth 1 -type f -name "${JAR_MATCH}" | wc -l | tr -d ' ') -eq 0 ]] ; then
       echo "${ARTIFACT} jar not found, building it"
-      mvn -DskipTests=true clean package 1>&2
+      MAVEN="mvn -DskipTests=true -Dcheckstyle.skip=true"
+      ${MAVEN} clean package 1>&2
     fi
 
     NUM_JARS=$(find target -maxdepth 1 -type f -name "${JAR_MATCH}" | grep -v '/target/' | wc -l | tr -d ' ')

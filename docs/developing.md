@@ -40,8 +40,12 @@ To stop the Kestrel MQ, simply kill its PID:
 
 Build *everything*:
 
-    mvn -DskipTests=true -P complete install   # just build it
-    mvn -P complete install                    # run the tests too (make sure all dev tools are installed)
+    # just build it
+    mvn -DskipTests=true -Dcheckstyle.skip=true -P complete install
+
+    # run the tests too (make sure all dev tools are installed)
+    # (we skip checkstyle because the utils/dyn-java library fails jclouds-enforced style checks)
+    mvn -Dcheckstyle.skip=true -P complete install
 
 To build only the cloudos code (exclude the libraries that rarely change), just drop the `-P complete` and run this from the top-level cloudstead-uber directory:
 
