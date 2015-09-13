@@ -14,13 +14,13 @@ Also ensure you have appropriate credentials for the various required [third par
 
 * Edit the following files, which will become databags accessible during the chef run:
 
-    * `my_init_files/data_bags/cloudos/base.json`
+    * `my_init_files/data_bags/base/base.json`
     * `my_init_files/data_bags/cloudos/init.json`
     * `my_init_files/data_bags/email/init.json`
     * If you will be using cloudos-dns instead of Dyn, you will also edit:
       * `my_init_files/data_bags/cloudos-dns/init.json` 
     
-* For `cloudos/base.json`:
+* For `base/base.json`:
     * Set `hostname` to whatever you want the hostname of the cloudstead to be. Use a one-word hostname, without any dots.
     * Set `parent_domain` to cloudstead.io
 * For `cloudos/init.json`:
@@ -53,7 +53,7 @@ Also ensure you have appropriate credentials for the various required [third par
     * If you are not using SendGrid, then set all the fields (`username`, `password`, `host` and `port`) to the values for the SMTP relay you are using.  
 
 * Copy the SSL certificate and key into the `my_init_files/certs/cloudos` directory. Name the private key file `ssl-https.key` and the public certificate file `ssl-https.pem` 
-  * These should be wildcard certificates for the `hostname`.`parent_domain` (from `cloudos/base.json`). They will be installed on your new CloudOs instance to enable SSL over all HTTP connections.
+  * These should be wildcard certificates for the `hostname`.`parent_domain` (from `base/base.json`). They will be installed on your new CloudOs instance to enable SSL over all HTTP connections.
   * You can use self-signed cerificates if you're willing to put up with warnings and add exceptions, or you can get buy a real SSL wildcard certificate from any number of reputable vendors.
 
 ## Prepare a new VirtualBox instance

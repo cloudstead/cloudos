@@ -40,13 +40,13 @@ When launching a cloudos instance, a cloudstead-server will:
 
 *Set using data from your Cloudstead profile or the CloudOsRequest:*
 
-   * cloudos/base.json: hostname ("newco" in the example above)
+   * base/base.json: hostname ("newco" in the example above)
    * cloudos/init.json: recovery\_email (email used at registration)
    * cloudos/init.json: admin\_initial\_pass (the bcrypted hash of your password, use this (along with a random key the cloudos emails once setup) to unlock the cloudos instance)
 
 *Set at launch time by public server:*
 
-   * cloudos/base.json: parent\_domain (for example, cloudstead.io)
+   * base/base.json: parent\_domain (for example, cloudstead.io)
    * cloudos/init.json: run_as (hardcoded to 'cloudos')
    * cloudos/init.json: aws\_iam\_user (the IAM user with perms to read/write from a subdir of the bucket. IAM username is a hash of the public-site-user-account's uuid + the cloudos name + salt)
    * cloudos/init.json: aws\_access\_key (access key for the IAM user, with perms to read/write from a subdir of the bucket)
@@ -69,8 +69,8 @@ When launching a cloudos instance, a cloudstead-server will:
 ### actor: cloudos-chef (on cloudos instance)
 When chef-solo runs, it uses the above config as follows:
 
-  * cloudos/base.json: hostname -- along with parent\_domain, determines the FQDN of the machine
-  * cloudos/base.json: parent_domain -- along with hostname, determines the FQDN of the machine
+  * base/base.json: hostname -- along with parent\_domain, determines the FQDN of the machine
+  * base/base.json: parent_domain -- along with hostname, determines the FQDN of the machine
   * cloudos/init.json: run\_as -- this is the unix user that the java server will run as
   * cloudos/init.json: recovery\_email -- see below, upon successful chef run, a setup link is sent to this address. it is also saved to ~/.first\_time\_setup (deleted after setup)
   * cloudos/init.json: admin\_initial\_pass -- saved in ~/.first\_time\_setup (after the user changes their password at first-time setup, this file is deleted)

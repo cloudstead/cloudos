@@ -87,7 +87,7 @@ To launch a new cloudstead that will use djbdns for DNS management:
           * Set `user` to the cloudos-dns username you created
           * Set `password` to that user's password
           * Set `base_uri` to the base URL of your cloudos-dns server
-       * Edit the `data_bags/cloudos/base.json` file
+       * Edit the `data_bags/base/base.json` file
           * Set `hostname` to the name of the cloudos-dns user you created
           * Set `parent_domain` to the DNS zone for the cloudos-dns user you created
 
